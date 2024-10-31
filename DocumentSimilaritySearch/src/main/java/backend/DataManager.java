@@ -4,7 +4,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-// import nlp.FeatureExtractor;
+// import nlp.ExtractDocument;
 // import nlp.SimilarityCalculator;
 
 import java.util.List;
