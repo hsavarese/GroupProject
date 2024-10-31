@@ -9,7 +9,7 @@ Since Kendra couldn’t attend class and Hunter arrived a bit late, I wanted to 
 
 1. **MongoDB Setup:** We learned how to create and manage a MongoDB database. I have already set up our database to facilitate document uploads.
    
-2. **Project Structure:** I created a project tree using a UML diagram. You can take a look at the code, which illustrates how to use MongoDB to create and upload documents.
+2. **Project Structure:** I created a project tree using the UML diagram that we submit to the instractor. You can take a look at the code, which illustrates how to use MongoDB to create and upload documents.
 
 ### Current Challenge
 
