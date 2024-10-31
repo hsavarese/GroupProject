@@ -1,5 +1,5 @@
 
-**WEEK  10/31
+**WEEK  10/31**
 
 **Update on MongoDB Setup and Document Handling**
 
