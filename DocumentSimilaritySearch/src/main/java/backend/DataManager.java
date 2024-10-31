@@ -23,7 +23,7 @@ public class DataManager {
     // Create operation: Upload a document and store its path and features
     public void createDocument(String path) {
         List<String> document = ExtractDocument.extractDocument(path);
-        Document doc = new Document("path", path).append("features", features);
+        Document doc = new Document("path", path).append("document", document);
         collection.insertOne(doc);
         System.out.println("Document uploaded to MongoDB successfully!");
     }
