@@ -17,7 +17,7 @@ One issue we’re facing before actulaly go deeper into the project  is to uploa
 
 ### Request for Assistance
 
-I need your help to provide code that will read and extract every word from a document just this and then we will be able to use the DAtaManager method to upload document to MangoDB. While I can utilize my code from past assignments, it’s important to ensure that we collaborate on this as a team project. Please share your ideas or code snippets so we can move forward together.
+I need your help to provide code that will read and extract every word from a document just this and then we will be able to use the DAtaManager method to upload document to MangoDB. While I can utilize my code from past assignments, it’s important to ensure that we collaborate on this as a team project. Please share your ideas or code  so we can push it into our Github project.
 
 
 ps: in the datamanager.java we will call the method that is going to extarxt the document so, I call it extractDocument, so when youll work on it just name the file like that .
