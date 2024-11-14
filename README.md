@@ -1,7 +1,7 @@
 
 **WEEK  10/31**
 
-**Update on MongoDB Setup and Document Handling**
+**Update on MongoDB Setup and Document Handling**(denis)
 
 Since Kendra couldn’t attend class and Hunter arrived a bit late, I wanted to share what we learned about using MongoDB for project. I've been able to gather all the information,so I created a MongoDB database to store our documents.
 
@@ -27,6 +27,33 @@ Thank you!
 Here is a Screenshot of what our tree project look like in the computer(We also discuss about it during class with the instructor) .
 
 ![2024-10-31](https://github.com/user-attachments/assets/58dad2c9-7cb3-44e0-a56a-963bf819a6a7)
+
+
+## Week 11/11: Document Processing and Upload(denis)
+
+Since for the past two weeks ,no one have been able to sent a code so we can import documents to MangpDb , I did it . So here are the next steps of the code, read it and tell me or ask me anything.
+
+### Objectives
+1. Implement the `ExtractDocument` class to read a document, extract its text, and calculate word frequencies.
+2. Integrate the `ExtractDocument` class with `DatabaseManager` to automatically extract and upload word frequency data.
+3. Lay the groundwork for similarity search functionality by preparing documents for analysis.
+
+### Progress
+- **ExtractDocument Class**: Developed a method to read a document file, split it into individual words, and calculate word frequencies. This data is stored in a `Map<String, Integer>` format.
+  - **Method**: `getWordFrequencies(filePath)` reads the document and returns a frequency map.
+- **DatabaseManager **: Updated `DatabaseManager` to use the `ExtractDocument` class for extracting word frequencies and uploading them to MongoDB.
+  - **New Method**: `uploadDocument(filePath)` now uses `ExtractDocument.getWordFrequencies()` to process the document before uploading it to MongoDB.
+
+### Next Steps
+- We will need to Implement the `SimilarityCalculator` class to compare word frequency using a similarity method .
+- I want You gues to come up with a simple SimilarityCalculator code that will copmpare documents frequencies ad tell if they are similar or not , i will work on implement it to the project, if no solutio came up by 2 weeks I will do it myself then.
+
+## result of the upload to MangoDB:
+
+![2024-11-13](https://github.com/user-attachments/assets/44b87eb2-204b-462c-a8be-c3339211d4f6)
+
+
+---
 
 
 
