@@ -31,7 +31,6 @@ Here is a Screenshot of what our tree project look like in the computer(We also 
 
 ## Week 11/11: Document Processing and Upload(denis)
 
-Since for the past two weeks ,no one have been able to sent a code so we can import documents to MangpDb , I did it . So here are the next steps of the code, read it and tell me or ask me anything.
 
 ### Objectives
 1. Implement the `ExtractDocument` class to read a document, extract its text, and calculate word frequencies.
