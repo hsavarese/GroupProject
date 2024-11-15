@@ -22,7 +22,7 @@ public class DataManager {
         public DataManager() {
             try (MongoClient mongoClient = new MongoClient("mongodb+srv://denis:COS225@documentbase.6wttq.mongodb.net/?retryWrites=true&w=majority&appName=DocumentBase")) {
                 this.database = mongoClient.getDatabase("DocumentDB");
-                this.collection = database.getCollection("documents");
+                this.collection = database.getCollection("documents"); //mongodb will label it has documents, but its articles in here
             }
         }
 
@@ -44,3 +44,5 @@ public class DataManager {
         ExtractDocument.writeWordFrequency(inputFile);
     }
 }
+
+
