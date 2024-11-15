@@ -51,7 +51,12 @@ Here is a Screenshot of what our tree project look like in the computer(We also 
 
 ![2024-11-13](https://github.com/user-attachments/assets/44b87eb2-204b-462c-a8be-c3339211d4f6)
 
+Added Article Class and Updated DataManager. 
+- Added article class which includes ways articles are indetified with a bunch of getters to get that information
+- Updated DataManager.java, tried to implement the add article, list articles, while keeping the word frequency intact
 
+  When run should create the CSV file with the article information. The article information  is hardcoded in the main located in the DataManager.java file.
+  The program should save the file to the CSV while also updating MongoDB with any new articles. 
 ---
 
 
