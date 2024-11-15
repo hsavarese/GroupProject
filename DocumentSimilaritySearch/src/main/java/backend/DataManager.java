@@ -6,67 +6,95 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import nlp.ExtractDocument;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Map;
 
 public class DataManager {
     private MongoDatabase database;
     private MongoCollection<Document> collection;
+    private static final String CSV_FILE_PATH = "articles_log.csv";
 
     public DataManager() {
+        // Connect to the database and set up the collection
         try (MongoClient mongoClient = new MongoClient("mongodb+srv://denis:COS225@documentbase.6wttq.mongodb.net/?retryWrites=true&w=majority&appName=DocumentBase")) {
             this.database = mongoClient.getDatabase("DocumentDB");
-            this.collection = database.getCollection("documents"); // MongoDB will label it as "documents", but it's used for articles here.
+            this.collection = database.getCollection("documents");
+            setupCsvFile(); // Make sure the CSV file is ready to use
         }
     }
 
-    // Upload a document's metadata to MongoDB
+    // Set up the CSV file with headers if it doesn't exist
+    private void setupCsvFile() {
+        try (FileWriter writer = new FileWriter(CSV_FILE_PATH, false)) {
+            writer.append("Name,Website,Media Class,Media Subclass,State,City,Social Links,Extracted From\n");
+        } catch (IOException e) {
+            System.err.println("Error setting up CSV file: " + e.getMessage());
+        }
+    }
+
+    // Save word frequencies from a document to the database
     public void uploadWordFrequencies(Map<String, Integer> frequencyMap, String path) {
         Document doc = new Document("path", path)
                 .append("wordFrequencies", frequencyMap);
 
         collection.insertOne(doc);
-        System.out.println("Word frequencies uploaded to MongoDB successfully!");
+        System.out.println("Word frequencies saved to MongoDB!");
     }
 
-    // Adds Article object to MongoDB
+    // Add an article to MongoDB and log it in the CSV file
     public void addArticle(Article article) {
         if (article == null) {
-            System.err.println("Invalid article: cannot be null.");
+            System.err.println("Article is missing information, can't save.");
             return;
         }
         try {
+            // Save the article in MongoDB
             Document articleDoc = article.getDocument();
             collection.insertOne(articleDoc);
-            System.out.println("Article added to MongoDB: " + article.getName());
+            System.out.println("Saved article to MongoDB: " + article.getName());
+
+            // Add the article info to the CSV
+            saveArticleToCsv(article);
         } catch (Exception e) {
-            System.err.println("Failed to add article: " + e.getMessage());
+            System.err.println("Couldn't save article: " + e.getMessage());
         }
     }
 
-    // Adsd article using raw values
+    // Add an article directly with its details (without using the Article object)
     public void addArticle(
             String name, String website, String mediaClass, String mediaSubclass,
             String usState, String cityCountyName, Map<String, String> socialLinks, String extractedFrom) {
         try {
-            Document articleDoc = new Document("name", name)
-                    .append("website", website)
-                    .append("media-class", mediaClass)
-                    .append("media-subclass", mediaSubclass)
-                    .append("us-state", usState)
-                    .append("city-county-name", cityCountyName)
-                    .append("social-links", socialLinks)
-                    .append("extracted-from", extractedFrom);
+            // Make an Article object with the given info
+            Article article = new Article(name, website, mediaClass, mediaSubclass, usState, cityCountyName, socialLinks, extractedFrom);
 
-            collection.insertOne(articleDoc);
-            System.out.println("Article added to MongoDB: " + name);
+            // Save the article
+            addArticle(article);
         } catch (Exception e) {
-            System.err.println("Failed to add article: " + e.getMessage());
+            System.err.println("Couldn't save article: " + e.getMessage());
         }
     }
 
-    // List all articles in the mongodb
+    // Save the article info in the CSV file
+    private void saveArticleToCsv(Article article) {
+        try (FileWriter writer = new FileWriter(CSV_FILE_PATH, true)) {
+            writer.append(article.getName()).append(",")
+                  .append(article.getWebsite()).append(",")
+                  .append(article.getMediaClass()).append(",")
+                  .append(article.getMediaSubclass()).append(",")
+                  .append(article.getUsState()).append(",")
+                  .append(article.getCityCountyName()).append(",")
+                  .append(article.getSocialLinks().toString().replace(",", ";")).append(",")
+                  .append(article.getExtractedFrom()).append("\n");
+        } catch (IOException e) {
+            System.err.println("Error saving article to CSV: " + e.getMessage());
+        }
+    }
+
+    // Show all articles saved in MongoDB
     public void listArticles() {
-        System.out.println("Listing all articles in the database:");
+        System.out.println("All saved articles:");
         for (Document doc : collection.find()) {
             System.out.println(doc.toJson());
         }
@@ -75,11 +103,11 @@ public class DataManager {
     public static void main(String[] args) {
         DataManager manager = new DataManager();
 
-        // Process document and upload word frequencies to MongoDB
+        // Example: Save word frequencies from a document
         String inputFile = "C:\\Users\\Sima\\OneDrive\\Documents\\DocumentSimilaritySearch\\src\\main\\java\\backend\\doc.txt";
         ExtractDocument.writeWordFrequency(inputFile);
 
-        // Example: Adding an Article object
+        // Example: Save an article using an Article object
         Map<String, String> socialLinks = Map.of(
                 "twitter", "http://www.twitter.com/adndotcom",
                 "facebook", "https://www.facebook.com/akdispatch",
@@ -97,7 +125,7 @@ public class DataManager {
         );
         manager.addArticle(article);
 
-        // Example: Adding another article using raw values
+        // Example: Save an article by giving the details directly
         manager.addArticle(
                 "Example News",
                 "http://www.example.com/",
@@ -109,10 +137,12 @@ public class DataManager {
                 "example.com"
         );
 
-        // List all articles
+        // Show all articles saved in MongoDB
         manager.listArticles();
     }
 }
+
+
 
 /*package backend;
 
