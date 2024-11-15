@@ -50,6 +50,9 @@ Here is a Screenshot of what our tree project look like in the computer(We also 
 ## result of the upload to MangoDB:
 
 ![2024-11-13](https://github.com/user-attachments/assets/44b87eb2-204b-462c-a8be-c3339211d4f6)
+
+
+
 **New Additions 11/15**
 
 Added Article Class and Updated DataManager. 
