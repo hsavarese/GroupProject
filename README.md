@@ -60,7 +60,28 @@ Added Article Class and Updated DataManager.
 - Updated DataManager.java, tried to implement the add article, list articles, while keeping the word frequency intact
 
   When run should create the CSV file with the article information. The article information  is hardcoded in the main located in the DataManager.java file.
-  The program should save the file to the CSV while also updating MongoDB with any new articles. 
+  The program should save the file to the CSV while also updating MongoDB with any new articles.
+
+  ## Week 11/18: Document Processing and Upload(denis)
+We had to change some stuff in the codes to make it work with our Json data set file . Now we able to upload documents from the dataset to MangoDB.
+
+Newspaper Class
+Represents a newspaper document with fields such as name, website, cityCountyName, usState, and more.
+
+Methods:
+Newspaper(...): Constructor to initialize all fields.
+getDocument(): Converts the Newspaper instance into a MongoDB-compatible Document.
+
+Use the Database class to ingest a dataset into MongoDB. Documents should follow the structure of the Newspaper class.
+
+### Next Steps
+- We will need to Implement the class to compare word frequency using a similarity method .
+- I want You gues to come up with a simple SimilarityCalculator code that will copmpare documents frequencies ad tell if they are similar or not , i will work on implement it to the project, if no solutio came up by 2 weeks I will do it myself then.
+
+## result of the upload to MangoDB:
+
+![2024-11-18](https://github.com/user-attachments/assets/e148495e-2169-4a8e-a5c0-12439ae7e427)
+
 ---
 
 
