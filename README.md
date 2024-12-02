@@ -82,7 +82,7 @@ Use the Database class to ingest a dataset into MongoDB. Documents should follow
 
 ![2024-11-18](https://github.com/user-attachments/assets/e148495e-2169-4a8e-a5c0-12439ae7e427)
 
-##December 2nd
+### December 2nd
 
 Added Similarity Calculator class to the NLP package. It follows the similar methods from the in class example's with focus on TFIDF score's 
 
