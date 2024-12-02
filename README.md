@@ -90,6 +90,8 @@ Added the list of stop words in a .txt file that was provided by the Prof. Those
 
 Updated the Menu class so it would work along with the Similarity Calcualtor. Did this since the main is in the menu class.
 
+### To Do: 
+- Look at the Prof's commits. Decide whats going on with both app.java files that we have in our folder. 
 ---
 
 
