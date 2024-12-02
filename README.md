@@ -91,7 +91,13 @@ Added the list of stop words in a .txt file that was provided by the Prof. Those
 Updated the Menu class so it would work along with the Similarity Calcualtor. Did this since the main is in the menu class.
 
 ### To Do: 
-- Look at the Prof's commits. Decide whats going on with both app.java files that we have in our folder. 
+- Look at the Prof's commits. Decide whats going on with both app.java files that we have in our folder.
+
+  Here's what he said:
+  As of commit #8e2ca8, the structure of the project is unclear. You have two `App.java` files in different packages. One is empty, the other one has a single print statement. Your dataset file is missing from your repository (`doc.txt`). It does not seem if the project is functional at the commit. Please check with me to see if you can get full credit.
+
+Points - 60/100
+
 ---
 
 
