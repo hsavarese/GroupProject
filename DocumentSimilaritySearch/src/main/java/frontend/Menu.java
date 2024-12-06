@@ -1,130 +1,182 @@
 package frontend;
 
 import backend.Database;
-import backend.Article;
+import org.bson.Document;
+import nlp.Newspaper;
 import nlp.SimilarityCalculator;
+import com.mongodb.client.MongoDatabase;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
 
-    private SimilarityCalculator similarityCalculator;
+    public static void main(String[] args) {
+        // Initialize the Database with your database name and collection name
+        Database database = new Database("newspaper_app_database", "newspaper_data");
 
-    public void startUp() {
-        // Create a database instance to handle articles
-        Database articleDatabase = new Database("newspaper_app_database", "newspaper_data");
-        articleDatabase.createCollection();
+        // Use the connectToDatabase method to get a connection
+        MongoDatabase mongoDatabase = database.connectToDatabase();
 
-        // Initialize the SimilarityCalculator with stop words file
-        similarityCalculator = new SimilarityCalculator("listOfStopWords.txt");
+        if (mongoDatabase == null) {
+            System.out.println("Failed to connect to the database. Exiting...");
+            return;
+        }
 
-        // Load articles from output.json into the database and the SimilarityCalculator
-        String jsonFile = "C:\\Users\\Sima\\Downloads\\DocumentSimilaritySearch\\src\\main\\resources\\output.json"; // Adjust path if needed
-        StringBuilder jsonString = new StringBuilder();
+        // Print database name to confirm successful connection
+        System.out.println("Connected to database: " + mongoDatabase.getName());
 
-        try (BufferedReader br = new BufferedReader(new FileReader(jsonFile))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                jsonString.append(line);
+        // Create a Scanner object for user input
+        Scanner scanner = new Scanner(System.in);
+
+        // Print welcome message and show menu options
+        System.out.println("Welcome to the newspaper app!");
+
+        while (true) {
+            // Display the menu
+            System.out.println("1. Add a newspaper to the database.");
+            System.out.println("2. Get details of a newspaper from the database.");
+            System.out.println("3. Find similar newspapers.");
+            System.out.println("4. Exit.");
+
+            // Get user choice
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // Consume the newline character after int input
+
+            switch (choice) {
+                case 1:
+                    // Add a newspaper to the database
+                    addNewspaperToDatabase(scanner, database);
+                    break;
+                case 2:
+                    // Get details of a newspaper from the database
+                    getNewspaperDetails(scanner, database);
+                    break;
+                case 3:
+                    // Find similar newspapers
+                    findSimilarNewspapers(scanner, database);
+                    break;
+                case 4:
+                    // Exit the program
+                    System.out.println("Exiting the application...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
             }
+        }
+    }
 
-            JSONObject jsonObject = new JSONObject(jsonString.toString());
+    // Method to add a newspaper to the database
+    private static void addNewspaperToDatabase(Scanner scanner, Database database) {
+        System.out.println("Enter the name of the newspaper (or type 'exit' to cancel): ");
+        String name = scanner.nextLine().trim();
+        if (name.isEmpty()) {
+            System.out.println("Newspaper name cannot be empty. Please try again.");
+            return;
+        } else if (name.equalsIgnoreCase("exit")) {
+            return;
+        }
 
-            // Go through all states and their newspapers
-            for (String state : jsonObject.keySet()) {
-                JSONArray newspapers = jsonObject.getJSONObject(state).getJSONArray("newspaper");
-                for (int i = 0; i < newspapers.length(); i++) {
-                    JSONObject newspaperJson = newspapers.getJSONObject(i);
+        // Automatically generate other details based on the name
+        String video = "https://defaultvideo.com/" + name.replaceAll(" ", "").toLowerCase();
+        String twitter = "@"+name.replaceAll(" ", "").toLowerCase() + "_news";
+        String website = "https://" + name.replaceAll(" ", "").toLowerCase() + ".com";
+        String facebook = "https://facebook.com/" + name.replaceAll(" ", "").toLowerCase();
+        String instagram = "https://instagram.com/" + name.replaceAll(" ", "").toLowerCase();
+        String youtube = "https://youtube.com/" + name.replaceAll(" ", "").toLowerCase();
+        String wikipedia = "https://en.wikipedia.org/wiki/" + name.replaceAll(" ", "_");
+        String cityCountyName = "Sample City"; // Use a default city
+        String usState = "Sample State"; // Use a default state
+        String extractedFrom = "AutoGenerated";
 
-                    String name = newspaperJson.getString("name");
-                    String website = newspaperJson.optString("website", "");
-                    String mediaClass = newspaperJson.optString("media-class", "");
-                    String mediaSubclass = newspaperJson.optString("media-subclass", "");
-                    String usState = newspaperJson.optString("us-state", "");
-                    String cityCountyName = newspaperJson.optString("city-county-name", "");
-                    String extractedFrom = newspaperJson.optString("extracted-from", "");
+        // Create the Newspaper object from user input
+        Newspaper newspaper = new Newspaper(name, video, twitter, website, facebook, 
+                                            instagram, youtube, wikipedia, 
+                                            cityCountyName, usState, extractedFrom);
 
-                    // Create an Article object
-                    Article article = new Article(name, website, mediaClass, mediaSubclass, usState, cityCountyName, null, extractedFrom);
+        // Get the document from the Newspaper object
+        Document newspaperDocument = newspaper.getDocument();
 
-                    // Add the article to the database
-                    articleDatabase.addToDatabase(article.getDocument());
+        // Add the newspaper document to the database
+        try {
+            database.addToDatabase(newspaperDocument);
+            System.out.println("Newspaper added to the database!");
 
-                    // Add the article to the SimilarityCalculator
-                    String articleContent = website + " " + mediaClass + " " + cityCountyName + " " + extractedFrom;
-                    similarityCalculator.addArticle(name, articleContent);
-                }
-            }
-
-            // Calculate IDF values for similarity scoring
-            similarityCalculator.calculateIDF();
-
-        } catch (IOException e) {
+            // Optionally, print the document added to confirm
+            System.out.println("Document: " + newspaperDocument.toJson());
+        } catch (Exception e) {
+            System.out.println("Error adding document to the database: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    public void shutDown() {
-        // Clean up the database by deleting the collection
-        Database articleDatabase = new Database("newspaper_app_database", "newspaper_data");
-        articleDatabase.deleteCollection();
+    // Method to get details of a newspaper from the database
+    private static void getNewspaperDetails(Scanner scanner, Database database) {
+        System.out.print("Enter the name of the newspaper to fetch details: ");
+        String name = scanner.nextLine().trim();
+
+        try {
+            List<Document> documents = database.getAllDocuments();
+            boolean found = false;
+            for (Document doc : documents) {
+                if (doc.getString("name").equalsIgnoreCase(name)) {
+                    found = true;
+                    System.out.println("Newspaper details: ");
+                    System.out.println(doc.toJson());
+                    break;
+                }
+            }
+            if (!found) {
+                System.out.println("No newspaper found with the name: " + name);
+            }
+        } catch (Exception e) {
+            System.out.println("Error fetching details: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    public static void main(String[] args) {
-        Menu menu = new Menu();
-
-        // Start the application
-        System.out.println("Starting the newspaper app...");
-        menu.startUp();
-
-        // Interactive menu for the user
-        System.out.println("Welcome to the newspaper app!");
-        System.out.println("1. Add a newspaper to the database.");
-        System.out.println("2. Get details of a newspaper from the database.");
-        System.out.println("3. Find similar newspapers.");
-        System.out.println("4. Exit.");
-
-        try (Scanner scanner = new Scanner(System.in)) {
-            while (true) {
-                System.out.print("Enter your choice: ");
-                int choice = scanner.nextInt();
-                scanner.nextLine();
-
-                switch (choice) {
-                    case 1:
-                        System.out.println("Add newspaper logic not implemented yet.");
-                        break;
-                    case 2:
-                        System.out.println("Get details of a newspaper logic not implemented yet.");
-                        break;
-                    case 3:
-                        // Find and recommend similar newspapers
-                        System.out.println("Enter text to find similar newspapers:");
-                        String inputText = scanner.nextLine();
-
-                        List<String> recommendations = menu.similarityCalculator.recommendArticles(inputText, 5);
-
-                        System.out.println("Recommended Newspapers:");
-                        for (String articleId : recommendations) {
-                            System.out.println("- " + articleId);
-                        }
-                        break;
-                    case 4:
-                        // Exit app
-                        System.out.println("Shutting down the app...");
-                        menu.shutDown();
-                        return;
-                    default:
-                        System.out.println("Invalid choice. Please try again.");
-                        break;
-                }
+    // Method to find similar newspapers
+    private static void findSimilarNewspapers(Scanner scanner, Database database) {
+        System.out.println("Finding similar newspapers...");
+    
+        // Retrieve all documents from the database
+        List<Document> documents = null;
+        try {
+            documents = database.getAllDocuments();
+        } catch (Exception e) {
+            System.out.println("Error fetching documents from database: " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+    
+        // Initialize the SimilarityCalculator with the stopwords file
+        SimilarityCalculator similarityCalculator = new SimilarityCalculator("C:\\Users\\Sima\\Downloads\\DocumentSimilaritySearch\\src\\main\\java\\nlp\\listOfStopWords.txt");
+    
+        // Add documents from the database to the SimilarityCalculator
+        for (Document doc : documents) {
+            String name = doc.getString("name");
+            String content = doc.getString("name") + " " + doc.getString("website"); // You can use the content of the document here, adjust as needed
+            similarityCalculator.addArticle(name, content);
+        }
+    
+        // Calculate the IDF values after all documents are added
+        similarityCalculator.calculateIDF();
+    
+        // Ask user for input to find similar newspapers
+        System.out.print("Enter a newspaper or topic to find similar newspapers: ");
+        String inputText = scanner.nextLine();
+    
+        // Get the recommended similar newspapers
+        List<String> similarNewspapers = similarityCalculator.recommendArticles(inputText, 5);  // Get top 5 recommendations
+    
+        if (similarNewspapers.isEmpty()) {
+            System.out.println("No similar newspapers found.");
+        } else {
+            System.out.println("Similar Newspapers: ");
+            for (String newspaper : similarNewspapers) {
+                System.out.println(newspaper);
             }
         }
     }
