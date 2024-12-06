@@ -1,6 +1,8 @@
 package nlp;
 
 import org.bson.Document;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Newspaper {
 
@@ -16,6 +18,7 @@ public class Newspaper {
     private String usState;
     private String extractedFrom;
 
+    // Constructor
     public Newspaper(String name, String video, String twitter, String website, String facebook,
                      String instagram, String youtube, String wikipedia, String cityCountyName, 
                      String usState, String extractedFrom) {
@@ -32,9 +35,10 @@ public class Newspaper {
         this.extractedFrom = extractedFrom;
     }
 
+    // Convert Newspaper object to Document
     public Document getDocument() {
-        Document document = new Document();
-        document.append("name", name)
+        return new Document()
+                .append("name", name)
                 .append("video", video)
                 .append("twitter", twitter)
                 .append("website", website)
@@ -42,9 +46,38 @@ public class Newspaper {
                 .append("instagram", instagram)
                 .append("youtube", youtube)
                 .append("wikipedia", wikipedia)
-                .append("city-county-name", cityCountyName)
-                .append("us-state", usState)
-                .append("extracted-from", extractedFrom);
-        return document;
+                .append("cityCountyName", cityCountyName)
+                .append("usState", usState)
+                .append("extractedFrom", extractedFrom);
+    }
+
+    // Method to process text fields
+    public void processTextFields() {
+        this.name = processText(name);
+        this.extractedFrom = processText(extractedFrom);
+        // You can process other fields as needed, like twitter, facebook, etc.
+    }
+
+    // Example of text processing method that might use 'twextword'
+    private String processText(String text) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+
+        // Apply twextword processing to each word
+        String[] words = text.split("\\s+");
+        List<String> processedWords = new ArrayList<>();
+        
+        for (String word : words) {
+            processedWords.add(twextword(word));  // Apply twextword method to each word
+        }
+
+        return String.join(" ", processedWords);
+    }
+
+    // Example method for twextword, you can modify this logic as needed
+    private String twextword(String word) {
+        // Example processing, could be removing unwanted characters or transforming text
+        return word.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();  // Removes non-alphanumeric characters and makes lowercase
     }
 }
