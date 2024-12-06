@@ -82,6 +82,14 @@ Use the Database class to ingest a dataset into MongoDB. Documents should follow
 
 ![2024-11-18](https://github.com/user-attachments/assets/e148495e-2169-4a8e-a5c0-12439ae7e427)
 
+
+**December 06  **(denis)
+
+To **finish the frontend code**, you'll now have a fully interactive menu system that connects to your database and backend logic. The menu allows you to add new newspapers, view all newspapers, and calculate similar documents. Additionally, remember to **update your file paths**:  
+1. **Update the path to your `listofwords.txt` file** in the `Menu` and the similarity calculator code.  
+2. **Update the database connection details** in `Database.java` to match your setup.  
+
+
 ### December 2nd
 
 Added Similarity Calculator class to the NLP package. It follows the similar methods from the in class example's with focus on TFIDF score's 
