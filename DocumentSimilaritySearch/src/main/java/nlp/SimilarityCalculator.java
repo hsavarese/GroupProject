@@ -1,6 +1,6 @@
 package nlp;
 
-import org.bson.Document;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SimilarityCalculator {
 
@@ -21,7 +22,7 @@ public class SimilarityCalculator {
         loadStopWords(stopWordsFilePath);
     }
 
-    // Reads through the stopwwords
+    // Reads through the stopwords
     private void loadStopWords(String stopWordsFilePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(stopWordsFilePath))) {
             String line;
@@ -39,14 +40,13 @@ public class SimilarityCalculator {
         String[] words = text.split("\\s+");
         List<String> filteredWords = new ArrayList<>();
         for (String word : words) {
-            if (!stopWords.contains(word)) {
+            if (!stopWords.contains(word) && !word.isEmpty()) {
                 filteredWords.add(word);
             }
         }
         return filteredWords.toArray(new String[0]);
     }
 
-   
     public void addArticle(String id, String text) {
         String[] words = processText(text);
         HashMap<String, Integer> wordCount = new HashMap<>();
@@ -66,7 +66,7 @@ public class SimilarityCalculator {
                     count++;
                 }
             }
-            idf.put(word, (float) Math.log((float) tf.size() / (count + 1)));
+            idf.put(word, (float) Math.log((float) (tf.size() + 1) / (count + 1)));  // Prevent division by zero
         }
     }
 
@@ -101,7 +101,7 @@ public class SimilarityCalculator {
                 .sorted((e1, e2) -> Float.compare(e2.getValue(), e1.getValue()))
                 .limit(numRecommendations)
                 .map(Map.Entry::getKey)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     // Loads the article from the json file
