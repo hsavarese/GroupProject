@@ -87,7 +87,11 @@ Use the Database class to ingest a dataset into MongoDB. Documents should follow
 
 To **finish the frontend code**, you'll now have a fully interactive menu system that connects to your database and backend logic. The menu allows you to add new newspapers, view all newspapers, and calculate similar documents. Additionally, remember to **update your file paths**:  
 1. **Update the path to your `listofwords.txt` file** in the `Menu` and the similarity calculator code.  
-2. **Update the database connection details** in `Database.java` to match your setup.  
+2. **Update the database connection details** in `Database.java` to match your setup.
+
+When entering the document of our choice it will be compare to 10000+ document to give us the document that is similar to it . below our databse:
+![2024-12-06](https://github.com/user-attachments/assets/a083a3bc-1163-4d48-83a0-4361f3c73cfa)
+
 
 
 ### December 2nd
