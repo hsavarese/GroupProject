@@ -6,14 +6,20 @@ import nlp.Newspaper;
 import nlp.SimilarityCalculator;
 import com.mongodb.client.MongoDatabase;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
+import org.json.JSONObject;
+import org.json.JSONArray;
+
 
 public class Menu {
 
     public static void main(String[] args) {
         // Initialize the Database with your database name and collection name
-        Database database = new Database("newspaper_app_database", "newspaper_data");
+        Database database = new Database("newspaper_app_database2", "newspaper_data2");
 
         // Use the connectToDatabase method to get a connection
         MongoDatabase mongoDatabase = database.connectToDatabase();
@@ -28,6 +34,9 @@ public class Menu {
 
         // Create a Scanner object for user input
         Scanner scanner = new Scanner(System.in);
+
+        // Load up to 100 newspapers before presenting the menu
+        startUp(database);
 
         // Print welcome message and show menu options
         System.out.println("Welcome to the newspaper app!");
@@ -68,48 +77,114 @@ public class Menu {
         }
     }
 
+    // Method to add 100 newspapers to the database
+    private static void startUp(Database database) {
+        // Path to the JSON file
+        String jsonFile = "C:\\Users\\Sima\\Downloads\\DocumentSimilaritySearch\\src\\main\\resources\\output.json";
+        StringBuilder jsonString = new StringBuilder();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(jsonFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                jsonString.append(line);
+            }
+
+            JSONObject jsonObject = new JSONObject(jsonString.toString());
+
+            // Counter for the number of newspapers added
+            int count = 0;
+
+            // Loop through the states and newspapers in the JSON
+            for (String state : jsonObject.keySet()) {
+                JSONObject stateJson = jsonObject.getJSONObject(state);
+                if (stateJson.has("newspaper")) {
+                    JSONArray newspapers = stateJson.getJSONArray("newspaper");
+                    for (int i = 0; i < newspapers.length(); i++) {
+                        if (count >= 10) {
+                            // Stop adding more documents once 100 newspapers have been added
+                            System.out.println("100 newspapers have been added to the database.");
+                            return;  // Exit the method to stop adding more newspapers
+                        }
+
+                        JSONObject newspaperJson = newspapers.getJSONObject(i);
+
+                        // Safely extract fields from JSON
+                        String name = newspaperJson.optString("name", "");
+                        String video = newspaperJson.optString("video", "");
+                        String twitter = newspaperJson.optString("twitter", "");
+                        String website = newspaperJson.optString("website", "");
+                        String facebook = newspaperJson.optString("facebook", "");
+                        String instagram = newspaperJson.optString("instagram", "");
+                        String youtube = newspaperJson.optString("youtube", "");
+                        String wikipedia = newspaperJson.optString("wikipedia", "");
+                        String cityCountyName = newspaperJson.optString("city-county-name", "");
+                        String usState = newspaperJson.optString("us-state", "");
+                        String extractedFrom = newspaperJson.optString("extracted-from", "");
+
+                        // Create a new Newspaper object
+                        Newspaper newspaper = new Newspaper(name, video, twitter, website, facebook, instagram, youtube, wikipedia, cityCountyName, usState, extractedFrom);
+
+                        // Add the newspaper to the database
+                        database.addToDatabase(newspaper.getDocument());
+
+                        // Increment the counter after adding a newspaper
+                        count++;
+                    }
+                }
+            }
+
+            System.out.println("Newspapers data successfully added to the database!");
+
+        } catch (IOException e) {
+            System.out.println("Error reading the JSON file: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("An error occurred while processing the data: " + e.getMessage());
+        }
+    }
+
     // Method to add a newspaper to the database
     private static void addNewspaperToDatabase(Scanner scanner, Database database) {
-        System.out.println("Enter the name of the newspaper (or type 'exit' to cancel): ");
-        String name = scanner.nextLine().trim();
-        if (name.isEmpty()) {
-            System.out.println("Newspaper name cannot be empty. Please try again.");
-            return;
-        } else if (name.equalsIgnoreCase("exit")) {
-            return;
-        }
-
-        // Automatically generate other details based on the name
-        String video = "https://defaultvideo.com/" + name.replaceAll(" ", "").toLowerCase();
-        String twitter = "@"+name.replaceAll(" ", "").toLowerCase() + "_news";
-        String website = "https://" + name.replaceAll(" ", "").toLowerCase() + ".com";
-        String facebook = "https://facebook.com/" + name.replaceAll(" ", "").toLowerCase();
-        String instagram = "https://instagram.com/" + name.replaceAll(" ", "").toLowerCase();
-        String youtube = "https://youtube.com/" + name.replaceAll(" ", "").toLowerCase();
-        String wikipedia = "https://en.wikipedia.org/wiki/" + name.replaceAll(" ", "_");
-        String cityCountyName = "Sample City"; // Use a default city
-        String usState = "Sample State"; // Use a default state
-        String extractedFrom = "AutoGenerated";
-
-        // Create the Newspaper object from user input
-        Newspaper newspaper = new Newspaper(name, video, twitter, website, facebook, 
-                                            instagram, youtube, wikipedia, 
-                                            cityCountyName, usState, extractedFrom);
-
-        // Get the document from the Newspaper object
-        Document newspaperDocument = newspaper.getDocument();
-
-        // Add the newspaper document to the database
-        try {
+            System.out.println("Enter the name of the newspaper: ");
+            String name = scanner.nextLine().trim();
+    
+            System.out.println("Enter the video URL (default: empty): ");
+            String video = scanner.nextLine().trim();
+    
+            System.out.println("Enter the Twitter handle (default: empty): ");
+            String twitter = scanner.nextLine().trim();
+    
+            System.out.println("Enter the website URL (default: empty): ");
+            String website = scanner.nextLine().trim();
+    
+            System.out.println("Enter the Facebook URL (default: empty): ");
+            String facebook = scanner.nextLine().trim();
+    
+            System.out.println("Enter the Instagram URL (default: empty): ");
+            String instagram = scanner.nextLine().trim();
+    
+            System.out.println("Enter the YouTube URL (default: empty): ");
+            String youtube = scanner.nextLine().trim();
+    
+            System.out.println("Enter the Wikipedia URL (default: empty): ");
+            String wikipedia = scanner.nextLine().trim();
+    
+            System.out.println("Enter the city/county name: ");
+            String cityCountyName = scanner.nextLine().trim();
+    
+            System.out.println("Enter the U.S. state: ");
+            String usState = scanner.nextLine().trim();
+    
+            System.out.println("Enter the source of extraction: ");
+            String extractedFrom = scanner.nextLine().trim();
+    
+            Newspaper newspaper = new Newspaper(name, video, twitter, website, facebook, instagram,
+                    youtube, wikipedia, cityCountyName, usState, extractedFrom);
+    
+            Document newspaperDocument = newspaper.getDocument();
             database.addToDatabase(newspaperDocument);
-            System.out.println("Newspaper added to the database!");
-
-            // Optionally, print the document added to confirm
-            System.out.println("Document: " + newspaperDocument.toJson());
-        } catch (Exception e) {
-            System.out.println("Error adding document to the database: " + e.getMessage());
-            e.printStackTrace();
-        }
+    
+            System.out.println("Newspaper added successfully!");
+    
     }
 
     // Method to get details of a newspaper from the database
