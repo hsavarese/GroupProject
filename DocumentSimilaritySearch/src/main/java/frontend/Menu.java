@@ -39,14 +39,23 @@ public class Menu {
         startUp(database);
 
         // Print welcome message and show menu options
+        System.out.println(" ");
+        System.out.println(" ");
         System.out.println("Welcome to the newspaper app!");
+        System.out.println(" ");
 
         while (true) {
             // Display the menu
+            System.out.println("__________________________________________________________");
             System.out.println("1. Add a newspaper to the database.");
+            System.out.println(" ");
             System.out.println("2. Get details of a newspaper from the database.");
+            System.out.println(" ");
             System.out.println("3. Find similar newspapers.");
+            System.out.println(" ");
             System.out.println("4. Exit.");
+            System.out.println(" ");
+            System.out.println("__________________________________________________________");
 
             // Get user choice
             System.out.print("Enter your choice: ");
@@ -68,10 +77,12 @@ public class Menu {
                     break;
                 case 4:
                     // Exit the program
+                    System.out.println(" ");
                     System.out.println("Exiting the application...");
                     scanner.close();
                     return;
                 default:
+                    System.out.println(" ");
                     System.out.println("Invalid choice. Please try again.");
             }
         }
@@ -133,6 +144,7 @@ public class Menu {
                 }
             }
 
+            System.out.println(" ");
             System.out.println("Newspapers data successfully added to the database!");
 
         } catch (IOException e) {
@@ -144,21 +156,27 @@ public class Menu {
 
     // Method to add a newspaper to the database
     private static void addNewspaperToDatabase(Scanner scanner, Database database) {
+            System.out.println(" ");
             System.out.println("Enter the name of the newspaper: ");
             String name = scanner.nextLine().trim();
-    
+
+           
             System.out.println("Enter the video URL (default: empty): ");
             String video = scanner.nextLine().trim();
-    
+
+      
             System.out.println("Enter the Twitter handle (default: empty): ");
             String twitter = scanner.nextLine().trim();
-    
+
+         
             System.out.println("Enter the website URL (default: empty): ");
             String website = scanner.nextLine().trim();
-    
+
+           
             System.out.println("Enter the Facebook URL (default: empty): ");
             String facebook = scanner.nextLine().trim();
-    
+            
+           
             System.out.println("Enter the Instagram URL (default: empty): ");
             String instagram = scanner.nextLine().trim();
     
@@ -182,13 +200,15 @@ public class Menu {
     
             Document newspaperDocument = newspaper.getDocument();
             database.addToDatabase(newspaperDocument);
-    
+
+            System.out.println(" ");
             System.out.println("Newspaper added successfully!");
     
     }
 
     // Method to get details of a newspaper from the database
     private static void getNewspaperDetails(Scanner scanner, Database database) {
+        System.out.println(" ");
         System.out.print("Enter the name of the newspaper to fetch details: ");
         String name = scanner.nextLine().trim();
 
@@ -214,6 +234,7 @@ public class Menu {
 
     // Method to find similar newspapers
     private static void findSimilarNewspapers(Scanner scanner, Database database) {
+        System.out.println(" ");
         System.out.println("Finding similar newspapers...");
     
         // Retrieve all documents from the database
@@ -240,6 +261,7 @@ public class Menu {
         similarityCalculator.calculateIDF();
     
         // Ask user for input to find similar newspapers
+        
         System.out.print("Enter a newspaper or topic to find similar newspapers: ");
         String inputText = scanner.nextLine();
     
