@@ -105,7 +105,8 @@ Updated the Menu class so it would work along with the Similarity Calcualtor. Di
 ### If running through WSL Linex make sure you change the path format to fit WSL.
 
 - Added shutdown function to the Menu class. This is so everytime the user exits the program it deletes the collection. 
-- Moved the stopwords.txt file to the resources folder and changed the way the code handles paths so the error "unknown file directory" was solved. 
+- Moved the stopwords.txt file to the resources folder and changed the way the code handles paths so the error "unknown file directory" was solved.
+- Added a simplelogger.properties to the resources package. This hides all logs except for warninings and errors
 
 ### Running Program Through the pom.xml file.
 - Under the Maven Commpile Program add
@@ -119,6 +120,10 @@ Updated the Menu class so it would work along with the Similarity Calcualtor. Di
                 </configuration>
             </plugin>
   This could vary depending on the version you are running.
+  -  Once in the correct path you can do:
+       - mvn clean compile
+       - mvn exec:java
+   To run the Program 
 
 ---
 
