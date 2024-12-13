@@ -102,10 +102,10 @@ Added the list of stop words in a .txt file that was provided by the Prof. Those
 
 Updated the Menu class so it would work along with the Similarity Calcualtor. Did this since the main is in the menu class.
 
-###If running through WSL Linex make sure you change the path format to fit WSL.
+### If running through WSL Linex make sure you change the path format to fit WSL.
 
-Added shutdown function to the Menu class. This is so everytime the user exits the program it deletes the collection. 
-Moved the stopwords.txt file to the resources folder and changed the way the code handles paths so the error "unknown file directory" was solved. 
+- Added shutdown function to the Menu class. This is so everytime the user exits the program it deletes the collection. 
+- Moved the stopwords.txt file to the resources folder and changed the way the code handles paths so the error "unknown file directory" was solved. 
 
 ### Running Program Through the pom.xml file.
 - Under the Maven Commpile Program add
