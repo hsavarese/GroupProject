@@ -18,18 +18,26 @@ public class SimilarityCalculator {
     private Set<String> stopWords = new HashSet<>();
 
     // Loads the stop words
-    public SimilarityCalculator(String stopWordsFilePath) {
-        loadStopWords(stopWordsFilePath);
+    public SimilarityCalculator() {
+        loadStopWords();
     }
 
     // Reads through the stopwords
-    private void loadStopWords(String stopWordsFilePath) {
-        try (BufferedReader br = new BufferedReader(new FileReader(stopWordsFilePath))) {
+    public void loadStopWords() {
+        try (InputStream inputStream = getClass().getResourceAsStream("/listOfStopWords.txt");
+             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+    
+            if (inputStream == null) {
+                System.out.println("Could not find /listOfStopWords.txt in classpath.");
+                return;
+            }
+    
             String line;
             while ((line = br.readLine()) != null) {
                 stopWords.add(line.trim());
             }
         } catch (IOException e) {
+            System.out.println("Error reading stop words file.");
             e.printStackTrace();
         }
     }
