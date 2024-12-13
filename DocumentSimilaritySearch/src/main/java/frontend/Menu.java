@@ -248,7 +248,7 @@ public class Menu {
         }
     
         // Initialize the SimilarityCalculator with the stopwords file
-        SimilarityCalculator similarityCalculator = new SimilarityCalculator("C:\\Users\\Sima\\Downloads\\DocumentSimilaritySearch\\src\\main\\java\\nlp\\listOfStopWords.txt");
+        SimilarityCalculator similarityCalculator = new SimilarityCalculator();
     
         // Add documents from the database to the SimilarityCalculator
         for (Document doc : documents) {
