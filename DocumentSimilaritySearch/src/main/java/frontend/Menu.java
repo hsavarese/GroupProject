@@ -79,6 +79,7 @@ public class Menu {
                     // Exit the program
                     System.out.println(" ");
                     System.out.println("Exiting the application...");
+                    shutDown(database);
                     scanner.close();
                     return;
                 default:
@@ -276,5 +277,11 @@ public class Menu {
                 System.out.println(newspaper);
             }
         }
+    }
+
+    //Deletes the collection when the user exits. 
+    public static void shutDown(Database database) {
+        database.deleteCollection();  
+        System.out.println("Collection deleted successfully.");
     }
 }
