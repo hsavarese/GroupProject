@@ -92,7 +92,7 @@ public class Menu {
     // Method to add 100 newspapers to the database
     private static void startUp(Database database) {
         // Path to the JSON file
-        String jsonFile = "C:\\Users\\Sima\\Downloads\\DocumentSimilaritySearch\\src\\main\\resources\\output.json";
+        String jsonFile = "C:\\Users\\Sima\\Downloads\\DocumentSimilaritySearch\\src\\main\\resources\\output.json"; //if running through WSL use a the correct path format
         StringBuilder jsonString = new StringBuilder();
 
         try (BufferedReader br = new BufferedReader(new FileReader(jsonFile))) {
